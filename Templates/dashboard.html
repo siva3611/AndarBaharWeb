@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Andar Bahar Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 4px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #1e40af;
+        }
+
+        .section {
+            margin-top: 30px;
+        }
+
+        .highlight {
+            font-size: 20px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .log {
+            background: #f9fafb;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Andar Bahar Manual Strategy Assistant</h1>
+    <form method="POST" action="/dashboard">
+        <label>Strategy:</label>
+        <select name="strategy">
+            <option value="labouchere" {% if strategy == 'labouchere' %}selected{% endif %}>Labouchere</option>
+            <!-- Add more strategy names later -->
+        </select>
+
+        <label>Initial Bet Size:</label>
+        <input type="number" name="bet_size" value="{{ bet_size or '' }}" required>
+
+        <label>Initial Sequence (Labouchere only, comma-separated):</label>
+        <input type="text" name="sequence" value="{{ sequence or '1,2,3' }}">
+
+        <button type="submit">Start Session</button>
+    </form>
+
+    {% if strategy %}
+    <div class="section">
+        <p class="highlight">Strategy: {{ strategy }}</p>
+        <p class="highlight">Next Bet: ₹{{ next_bet }}</p>
+        <form method="POST" action="/update">
+            <button type="submit" name="result" value="win">✅ Win</button>
+            <button type="submit" name="result" value="lose">❌ Lose</button>
+        </form>
+
+        <p><strong>Current Sequence:</strong> {{ current_sequence }}</p>
+
+        <form method="POST" action="/reset">
+            <button type="submit">Reset Session</button>
+        </form>
+
+        <div class="log">
+            <strong>Session Log:</strong><br>
+            {{ session_log }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
